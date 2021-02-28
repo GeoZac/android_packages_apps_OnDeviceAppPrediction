@@ -53,6 +53,7 @@ import java.util.function.Consumer;
 public class PredictionService extends AppPredictionService {
 
     private static final String TAG = PredictionService.class.getSimpleName();
+    private static final boolean DEBUG = false;
 
     private final Set<AppPredictionSessionId> activeLauncherSessions = new HashSet<>();
 
@@ -96,7 +97,7 @@ public class PredictionService extends AppPredictionService {
               getDefaultSystemHandlerActivityPackageName(browserIntent),
         };
 
-        Log.d(TAG, "AppPredictionService onCreate");
+        if (DEBUG) Log.d(TAG, "AppPredictionService onCreate");
         this.sharedPreferences = getSharedPreferences(MY_PREF, Context.MODE_PRIVATE);
         this.editor = sharedPreferences.edit();
 
@@ -145,7 +146,7 @@ public class PredictionService extends AppPredictionService {
     @Override
     public void onCreatePredictionSession(
             AppPredictionContext context, AppPredictionSessionId sessionId) {
-        Log.d(TAG, "onCreatePredictionSession");
+        if (DEBUG) Log.d(TAG, "onCreatePredictionSession");
 
         if (context.getUiSurface().equals("home") || context.getUiSurface().equals("overview")) {
             activeLauncherSessions.add(sessionId);
@@ -161,7 +162,7 @@ public class PredictionService extends AppPredictionService {
         }
 
         boolean found = false;
-        Log.d(TAG, "onAppTargetEvent");
+        if (DEBUG) Log.d(TAG, "onAppTargetEvent");
 
         AppTarget target = event.getTarget();
         if (target == null || isEmpty(target.getPackageName()) || isEmpty(target.getClassName())) {
@@ -190,7 +191,7 @@ public class PredictionService extends AppPredictionService {
             predictionList.remove(predictionList.size() - 1);
             predictionList.add(0, event.getTarget());
 
-            Log.d(TAG, "onAppTargetEvent:: update predictions");
+            if (DEBUG) Log.d(TAG, "onAppTargetEvent:: update predictions");
             postPredictionUpdateToAllClients();
         }
     }
@@ -198,7 +199,7 @@ public class PredictionService extends AppPredictionService {
     @Override
     public void onLaunchLocationShown(
             AppPredictionSessionId sessionId, String launchLocation, List<AppTargetId> targetIds) {
-        Log.d(TAG, "onLaunchLocationShown");
+        if (DEBUG) Log.d(TAG, "onLaunchLocationShown");
     }
 
     @Override
@@ -208,7 +209,7 @@ public class PredictionService extends AppPredictionService {
             CancellationSignal cancellationSignal,
             Consumer<List<AppTarget>> callback) {
 
-        Log.d(TAG, "onSortAppTargets");
+        if (DEBUG) Log.d(TAG, "onSortAppTargets");
         if (!activeLauncherSessions.contains(sessionId)) {
             callback.accept(emptyList());
         } else {
@@ -219,30 +220,30 @@ public class PredictionService extends AppPredictionService {
 
     @Override
     public void onRequestPredictionUpdate(AppPredictionSessionId sessionId) {
-        Log.d(TAG, "onRequestPredictionUpdate");
+        if (DEBUG) Log.d(TAG, "onRequestPredictionUpdate");
 
         if (!activeLauncherSessions.contains(sessionId)) {
             updatePredictions(sessionId, emptyList());
         } else {
             postPredictionUpdate(sessionId);
-            Log.d(TAG, "update predictions");
+            if (DEBUG) Log.d(TAG, "update predictions");
         }
     }
 
     @Override
     public void onDestroyPredictionSession(AppPredictionSessionId sessionId) {
-        Log.d(TAG, "onDestroyPredictionSession");
+        if (DEBUG) Log.d(TAG, "onDestroyPredictionSession");
         activeLauncherSessions.remove(sessionId);
     }
 
     @Override
     public void onStartPredictionUpdates() {
-        Log.d(TAG, "onStartPredictionUpdates");
+        if (DEBUG) Log.d(TAG, "onStartPredictionUpdates");
     }
 
     @Override
     public void onStopPredictionUpdates() {
-        Log.d(TAG, "onStopPredictionUpdates");
+        if (DEBUG) Log.d(TAG, "onStopPredictionUpdates");
     }
 
     public void setAppSuggestionsEnabled(boolean enabled) {
