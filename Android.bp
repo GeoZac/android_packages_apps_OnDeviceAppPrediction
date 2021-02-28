@@ -48,3 +48,10 @@ android_app {
 
     required: ["privapp_whitelist_com.android.apppredictionservice"],
 }
+
+prebuilt_etc {
+    name: "privapp_whitelist_com.android.apppredictionservice",
+    sub_dir: "permissions",
+    src: "com.android.apppredictionservice.xml",
+    filename_from_src: true,
+}
