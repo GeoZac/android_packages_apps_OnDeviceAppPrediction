@@ -148,10 +148,8 @@ public class PredictionService extends AppPredictionService {
             AppPredictionContext context, AppPredictionSessionId sessionId) {
         if (DEBUG) Log.d(TAG, "onCreatePredictionSession");
 
-        if (context.getUiSurface().equals("home") || context.getUiSurface().equals("overview")) {
-            activeLauncherSessions.add(sessionId);
-            postPredictionUpdate(sessionId);
-        }
+        activeLauncherSessions.add(sessionId);
+        postPredictionUpdate(sessionId);
     }
 
     @Override
